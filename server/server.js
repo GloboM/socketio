@@ -25,9 +25,10 @@ io.on('connection', (socket)=> {
     socket.broadcast.emit('newMessage',generateMessage("admin","new user connected"));
 
 
-    socket.on("createMessage", (message) => {
+    socket.on("createMessage", (message,callback) => {
 
-        io.emit("newMessage",generateMessage(message.from,message.text))
+        io.emit("newMessage",generateMessage(message.from,message.text));
+        callback("this is an acknhowledgement from the server that the message is received");
 
     })
 
