@@ -4,10 +4,6 @@ var socket = io();
 socket.on('connect', () => {
     console.log('connected to server');
 
-    socket.emit('messageFromClient', {
-        to:'all',
-        text: 'hello for all '
-    })
 
 
 })

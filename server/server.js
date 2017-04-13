@@ -19,13 +19,14 @@ io.on('connection', (socket)=> {
         console.log(' a user is disconnected')
     })
 
-    socket.emit('messageFromServer',{
-        to:'all',
-        message:"how can i help"
-    })
+
 
     socket.on('messageFromClient', (message) => {
-        console.log('im from the client', message)
+        console.log('im from the client', message);
+        io.emit('messageFromServer',{
+            to:message.to,
+            text:message.text
+        })
     })
 })
 
