@@ -9,6 +9,8 @@ var app = express();
 var server = http.createServer(app);
 var io = sockectIO(server);
 
+var { generateMessage}  = require('./utils/messages');
+
 app.use(express.static(publicPath));
 
 io.on('connection', (socket)=> {
@@ -19,15 +21,23 @@ io.on('connection', (socket)=> {
         console.log(' a user is disconnected')
     })
 
+    socket.emit('newMessage',generateMessage("admin","welcome"));
+    socket.broadcast.emit('newMessage',generateMessage("admin","new user connected"));
 
 
-    socket.on('messageFromClient', (message) => {
-        console.log('im from the client', message);
-        io.emit('messageFromServer',{
-            to:message.to,
-            text:message.text
-        })
+    socket.on("createMessage", (message) => {
+
+        io.emit("newMessage",generateMessage(message.from,message.text))
+
     })
+
+    // socket.on('messageFromClient', (message) => {
+    //     console.log('im from the client', message);
+    //     io.emit('messageFromServer',{
+    //         to:message.to,
+    //         text:message.text
+    //     })
+    // })
 })
 
 

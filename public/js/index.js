@@ -6,15 +6,19 @@ socket.on('connect', () => {
 
 
 
+
 })
 
 socket.on('disconnect', () => {
     console.log('connection lost')
 })
 
-socket.on('messageFromServer', function (message) {
+socket.on('newMessage', function (message) {
 
-    console.log("message from the server: ", message)
+    console.log("message from "+message.from +' : '+message.text);
 
 })
+
+
+
 
