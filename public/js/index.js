@@ -43,7 +43,8 @@ share_location.on('click', function () {
         })
 
     },function () {
-        alert('An error is occured')
+        alert('An error is occured');
+        share_location.removeAttr("disabled").text("Share location");
     })
 
     socket.on('geoPositionUrl',function (position) {
