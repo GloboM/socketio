@@ -1,6 +1,29 @@
 
 var socket = io();
 
+
+function scrollToBottom() {
+
+    // selectors
+
+    var messages = jQuery("#messages");
+    var lastmessage = messages.children("li:last-child");
+
+
+    // height
+    var scrollHeight  = messages.prop("scrollHeight");
+    var clientHeight = messages.prop("clientHeight");
+    var scrollTop = messages.prop("scrollTop");
+    var lastMessageHeight = lastmessage.innerHeight();
+    var beforeLastMessage = lastmessage.prev().innerHeight();
+
+    if(clientHeight+scrollTop+lastMessageHeight+ beforeLastMessage >= scrollHeight){
+
+        messages.scrollTop(scrollHeight);
+    }
+
+}
+
 socket.on('connect', () => {
     console.log('connected to server');
 
@@ -15,9 +38,19 @@ socket.on('disconnect', () => {
 
 socket.on('newMessage', function (message) {
 
-    var li = jQuery("<li></li>");
-    li.text(message.from+" : "+ message.text);
-    jQuery("#messages").append(li);
+    var message_template = jQuery("#message_template").html();
+    var message_html = Mustache.render(message_template, {
+        from: message.from,
+        text:message.text,
+        createdAt: moment(message.timestamp).format("hh:mm a")
+
+    });
+    jQuery('#messages').append(message_html);
+    scrollToBottom();
+
+    // var li = jQuery("<li></li>");
+    // li.text(message.from+" : "+moment(message.timestamp).format("hh:mm a")+ " :"+ message.text);
+    // jQuery("#messages").append(li);
 
 
 })
@@ -50,13 +83,24 @@ share_location.on('click', function () {
     socket.on('geoPositionUrl',function (position) {
         //console.log(position.url)
 
-        var li = jQuery("<li></li>");
-        var link = jQuery("<a target='_blank'>My current location</a>");
-        li.text(`${position.from} `);
-        link.attr('href',position.url);
-        li.append(link)
+        var position_template = jQuery('#position_template').html();
+        var position_html = Mustache.render(position_template,{
+            from: position.from,
+            url: position.url,
+            createdAt: moment(position.timestamp).format("hh:mm a")
+        })
 
-        jQuery('#messages').append(li);
+        jQuery("#messages").append(position_html);
+        scrollToBottom();
+
+
+        // var li = jQuery("<li></li>");
+        // var link = jQuery("<a target='_blank'>My current location</a>");
+        // li.text(`${position.from} : ${moment(position.timestamp).format("hh:mm a")} `);
+        // link.attr('href',position.url);
+        // li.append(link)
+        //
+        // jQuery('#messages').append(li);
 
 
     })
