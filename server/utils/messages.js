@@ -7,4 +7,11 @@ var generateMessage = (from, text) => {
     }
 }
 
-module.exports = { generateMessage};
+var generateGeoPosURL = (from,lattitude, longitude) =>{
+    return {
+        from,
+        url:`https://maps.google.com?q=${lattitude},${longitude}`,
+        timestamp: new Date().getTime()
+    }
+}
+module.exports = { generateMessage, generateGeoPosURL};

@@ -9,7 +9,7 @@ var app = express();
 var server = http.createServer(app);
 var io = sockectIO(server);
 
-var { generateMessage}  = require('./utils/messages');
+var { generateMessage, generateGeoPosURL}  = require('./utils/messages');
 
 app.use(express.static(publicPath));
 
@@ -30,6 +30,11 @@ io.on('connection', (socket)=> {
         io.emit("newMessage",generateMessage(message.from,message.text));
         callback("this is an acknhowledgement from the server that the message is received");
 
+    })
+
+    socket.on('geolocationCoordinates', (coordinates) => {
+        //console.log(coordinates);
+        io.emit('geoPositionUrl',generateGeoPosURL(coordinates.from,coordinates.latitude,coordinates.longitude))
     })
 
     // socket.on('messageFromClient', (message) => {
